@@ -15,7 +15,7 @@ sys_randper = 1;
 pdfmvna <- function(a,r,s) {
 	m <- length(a)
 	filler_matrix <- lower.tri(diag(m), diag=F)
-	rRowCol <- which(fillerMatrix == TRUE, arr.in = TRUE)
+	rRowCol <- which(filler_matrix == TRUE, arr.in = TRUE)
 	rRow <- rRowCol[,1]
 	rCol <- rRowCol[,2]
 
@@ -63,8 +63,7 @@ pdfmvna <- function(a,r,s) {
 		z2 = 1-z3
 		cond = 1
 
-		for(k in 3:m)
-		{
+		for(k in 3:m) {
 			omega21 = z[k,1:k-1]-z1[k,1:k-1]
 			omega11 = z[1:k-1,1:k-1]-z1[1:k-1,1:k-1]
 			cm = chol2inv(chol(omega11))#chol2inv(chol/solve
@@ -100,6 +99,7 @@ pdfmvna <- function(a,r,s) {
     diag(rho1) <- rep(0,m)
     rho2 = sqrt(1-rho1^2)
     
+    # what do these do? 
     g3 = dnorm(x)
     g5 = (y-rho1*x)/rho2
     g10 = g3*pnorm(g5)
@@ -107,12 +107,12 @@ pdfmvna <- function(a,r,s) {
     g12 = g10-g11
     g13 = g12   
     g14 = g3*(1-2*z3)
-    g15 = g13diag(g15) = g14
+    g15 = g13diag(g15) = g14 #FIXME this is unclear; the first time g15 appears
     g20 = -g3
   
     g25 = (1/rho2)*g3*dnorm(g5)
     diag(g25) <- rep(0,m)    
-    g25Vec =  g25[fillerMatrix]
+    g25Vec =  g25[filler_matrix]
     
     rhovec = matrix(nrow=1,ncol=0)   
     for(idim in (1:(ncol(rho)-1))) {
