@@ -321,26 +321,26 @@ cdfmvna <- function(a,r,s){
 #' 
 #' @export
 getComb  <- function(n,dim){
-	combsALL <- combn(n,dim);
-	combsALL = t(combsALL);
-	permsall = matrix(nrow=0,ncol=n);
-
-
-	numCombs <- nrow(combsALL);
-	for(irow in 1:numCombs)
-	{
-		othDims <- matrix(nrow=1,ncol=0);
-		for(idim in 1:n)
-		{
-			check = which(combsALL[irow,]==idim);
+	combs_all <- combn(n,dim)
+	combs_all <- t(combsALL)
+	perms_all <- matrix(nrow = 0, ncol = n)
+	num_combs <- nrow(combs_all)
+	
+	# TODO: this might be the kind of thing that would be better in c++
+	for(irow in 1:num_combs){
+		othDims <- matrix(nrow=1,ncol=0)
+		for(idim in 1:n){
+			check <- which(combs_all[irow,] == idim)
 			if(length(check) == 0 ){
-				othDims <- cbind(othDims,idim);
+				oth_dims <- cbind(othDims, idim)
 			}
 		}
-		othDims <- permutations(ncol(othDims),ncol(othDims),othDims);
-		iniDims = kronecker(combsALL[irow,], matrix(1,ncol=nrow(othDims),nrow=1)  );
-		iniDims =t(iniDims );
-		permsall <- rbind(permsall,cbind(iniDims,othDims));
+		
+		oth_dims <- permutations(ncol(othDims),ncol(othDims),othDims);
+		ini_dims <- kronecker(combs_all[irow,], 
+		                     matrix(1, ncol = nrow(othDims), nrow = 1))
+		ini_dims <- t(ini_dims)
+		perms_all <- rbind(perms_all, cbind(ini_dims,oth_dims))
 	}
-	return(permsall);
-}
+	
+	permsall
