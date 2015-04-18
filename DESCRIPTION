@@ -1,0 +1,13 @@
+Package: macml
+Title: Estimate maximum approximate composite marginal likelihood
+Version: 0.1
+Authors@R: c(person("Raghu", "Sidharthan", email = "sidharthanr@pbworld.com", 
+             role = "aut"),
+             person("Greg", "Macfarlane", email = "gregmacfarlane@gmail.com",
+             role = "cre"))
+Description: What the package does (one paragraph)
+Depends: R (>= 3.1.0)
+License: What license is it under?
+LazyData: true
+Suggests: knitr
+VignetteBuilder: knitr
