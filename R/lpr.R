@@ -54,7 +54,7 @@ lpr <-function(x) {
 
 #' lgd
 #' 
-#' @param 
+#' @param x
 #' 
 #' @export
 lgd <-function(x) {
