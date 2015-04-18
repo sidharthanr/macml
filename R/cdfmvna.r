@@ -4,10 +4,17 @@ library(pbivnorm)
 
 sys_randper = 1;
 
-pdfmvna <- function(a,r,s)
-{
 	m = length(a);fillerMatrix =lower.tri(diag(m),diag=F);  
 	rRowCol <- which(fillerMatrix==T, arr.in=TRUE); rRow = rRowCol[,1]; rCol = rRowCol[,2];
+#' The probability density function of the mvna
+#' 
+#' @param a 
+#' @param r 
+#' @param s
+#' 
+#' @export
+#' 
+pdfmvna <- function(a,r,s) {
 
 	w = 0; s1 = 0;	
 	if(sys_randper ==0){
@@ -235,9 +242,13 @@ pdfmvna <- function(a,r,s)
 }
 
 
-
-cdfmvna <- function(a,r,s)
-{	
+#' The cumulative density function of the mvna
+#' 
+#' @param a
+#' @param r
+#' @param s
+#' @export
+cdfmvna <- function(a,r,s){	
 	m = length(a);
 	w = 0; s1 = 0;	
 	if(sys_randper ==0){
@@ -303,8 +314,13 @@ cdfmvna <- function(a,r,s)
 	}
 }
 
-getComb  <- function(n,dim)
-{
+#' Get combination
+
+#' @param n
+#' @param dim
+#' 
+#' @export
+getComb  <- function(n,dim){
 	combsALL <- combn(n,dim);
 	combsALL = t(combsALL);
 	permsall = matrix(nrow=0,ncol=n);
