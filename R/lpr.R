@@ -82,15 +82,13 @@ lgd <-function(x) {
   diag(omega11) <-  x_sig;
   omega11 = omega11^2;
   gg = matrix(nrow=nobs,ncol=length(x));
-  for(iobs in (1:nobs))
-  {
+  for(iobs in (1:nobs)) {
     seed20=seednext;
     xx = matrix(rep(dtaX[iobs,],nc-1),nrow=nc*(nc-1),ncol=nvar,byrow = TRUE);
     xx = (-appdiff[,iobs]) * xx 
     
     xx1 = matrix(nrow=(nc-1),ncol=nvar);
-    for(inc in 1:(nc-1))
-    {
+    for(inc in 1:(nc-1)) {
       xx1[inc,] = colSums(xx[((inc-1)*nc+1):(inc*nc),]);
     }
     omega = xx1%*%omega11%*%t(xx1) + ID;
@@ -99,8 +97,6 @@ lgd <-function(x) {
     kk1 = dutil[,iobs]/sqrt_om;
     kk2 = omega;kk2=t(kk2/sqrt_om)/sqrt_om;
     diag(kk2) <- rep(1,nc-1);
-    
-    
     
     retval = pdfmvna(kk1,kk2,seed20); 
     
