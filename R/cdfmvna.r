@@ -1,4 +1,4 @@
-library(combinat)
+#library(combinat)
 library(gtools)
 library(pbivnorm)
 
@@ -107,7 +107,8 @@ pdfmvna <- function(a,r,s) {
     g12 = g10-g11
     g13 = g12   
     g14 = g3*(1-2*z3)
-    g15 = g13diag(g15) = g14 #FIXME this is unclear; the first time g15 appears
+    g15 = g13
+    diag(g15) = g14 
     g20 = -g3
   
     g25 = (1/rho2)*g3*dnorm(g5)
