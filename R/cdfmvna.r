@@ -1,4 +1,4 @@
-#library(combinat)
+library(combinat)
 library(gtools)
 library(pbivnorm)
 
@@ -11,7 +11,9 @@ sys_randper = 1;
 #' @param s
 #' 
 #' @export
-#' 
+#'
+#' @import pbivnorm 
+#' @import combinat
 pdfmvna <- function(a,r,s) {
 	m <- length(a)
 	filler_matrix <- lower.tri(diag(m), diag=F)
