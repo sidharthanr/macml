@@ -3,56 +3,61 @@
 #' @param x
 #' 
 #' @export
-lpr <-function(x) {
-  x_b = x[1:nvar];
-  x_sig = x[(nvar+1):(2*nvar)];
-  v2 = as.vector(kronecker(matrix(1,nrow=nc,ncol=1),x_b));
-  v2 = v2 * t(dtaX);
+lpr <- function(x) {
+  n_var = length(x) / 2
+  beta = x[1:n_var]
+  sigma = x[(n_var + 1):(2 * n_var)]
+  v2 = as.vector(kronecker(matrix(1, nrow = n_alts, ncol = 1), beta))
+  v2 = v2 * t(attribute_mtx)
   
-  ut = matrix(nrow=nc,ncol=nobs);
-  for(inc in 1:nc){
-    ut[inc,] = colSums(v2[((inc-1)*nvar+1):(inc*nvar),]);
+  ut = matrix(nrow = n_alts, ncol = n_obs)
+  for(i in 1:n_alts){
+    ut[i,] = colSums(v2[((i - 1) * n_var + 1):(i * n_var), ])
   }
-  dd = appdiff * (kronecker(matrix(1,nrow=nc-1,ncol=1),ut));
-  dutil = matrix(nrow=(nc-1),ncol=nobs);
-  for(inc in 1:(nc-1)){
-    dutil[inc,] =  colSums(dd[((inc-1)*nc+1):(inc*nc),]);
+  
+  dd = appdiff * (kronecker(matrix(1, nrow = n_alts - 1, ncol = 1), ut))
+  dutil = matrix(nrow = n_alts - 1, ncol = n_obs)
+  for(i in 1:(n_alts - 1)){
+    dutil[i, ] =  colSums(dd[((i - 1) * n_alts + 1):(i * n_alts), ])
   }
-  seednext=seed10;
   
-  omega11 = matrix(0,nrow=nvar,ncol=nvar);
-  diag(omega11) <-  x_sig;
-  omega11 = omega11^2;
   
-  ll = matrix(nrow=nobs,ncol=1);
+  omega11 = diag(sigma) ^ 2
   
-  for(iobs in (1:nobs))
-  {
-    seed20=seednext;
-    xx = matrix(rep(dtaX[iobs,],nc-1),nrow=nc*(nc-1),ncol=nvar,byrow = TRUE);
-    xx = (-appdiff[,iobs]) * xx 
+  ll = matrix(nrow = n_obs, ncol = 1)
+  
+  # TODO: This will be ***lots*** faster if we can vectorize it.
+  for(i in 1:n_obs){
+    xx = matrix(rep(attribute_mtx[i, ], n_alts - 1),
+                nrow= n_alts * (n_alts - 1),
+                ncol= n_var, byrow = TRUE)
+    xx = (-appdiff[, i]) * xx 
     
-    xx1 = matrix(nrow=(nc-1),ncol=nvar);
-    for(inc in 1:(nc-1))
-    {
-      xx1[inc,] = colSums(xx[((inc-1)*nc+1):(inc*nc),]);
+    xx1 = matrix(nrow = n_alts - 1, ncol = n_var)
+    for(j in 1:n_alts - 1) {
+      xx1[j, ] = colSums(xx[((j - 1) * n_alts + 1):(j * n_alts), ])
     }
-    omega = xx1%*%omega11%*%t(xx1) + ID;
-    sqrt_om = sqrt(diag(omega));
-    kk1 = dutil[,iobs]/sqrt_om;
-    kk2 = omega;kk2=t(kk2/sqrt_om)/sqrt_om;
-    diag(kk2) <- rep(1,nc-1);
-    retval = cdfmvna(kk1,kk2,seed20);
-    seednext = retval[2];
-    ll[iobs,1]= retval[1];
+    
+    omega = xx1 %*% omega11 %*% t(xx1) + ID
+    sqrt_om = sqrt(diag(omega))
+    
+    kk1 = dutil[, i] / sqrt_om
+    kk2 = t(omega / sqrt_om)/sqrt_om
+    seed20 = seed10 
+    retval = cdfmvna(kk1,kk2, seed20)
+    seednext = retval[2]
+    ll[i, 1] = retval[1]
   } 
-  ll = log(ll);
-  ll = mean(ll);  
   
-  return(ll);
+  
+  mean(log(ll))
+  
 }
 
-#' lgd
+#' Gradient of the CML
+#'
+#' \code{l_gradient} returns the gradient of the composite marginal likelihood
+#' function.
 #' 
 #' @param x
 #' 
