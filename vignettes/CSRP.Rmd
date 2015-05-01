@@ -20,50 +20,8 @@ library(dplyr)
 
 The `cs_uncorrelated` dataset is included in the `macml` package. 
 
-```{r setup_data}
-dt <- tbl_df(cs_uncorrelated)
-nobs <- 5000
-nvar <- 5 
-nc <- 5		
-```
-
 The dataset contains measurements on five attributes of five alternatives.
 
-```{r attribute}
-dtaX <- as.matrix(dt %>% select(x01:x25))
-dtaCh <- as.matrix(dt %>% select(f1:f5))
-dtaChNum <- apply(dtaCh, 1, function(x) which(x == 1))
-```
-
-
-```{r appdel}
-appdel <- kronecker(matrix(1, 1, nc - 1), dtaCh)
-appdel_tplt <-  matrix(nrow = 0, ncol = nc * (nc - 1))
-for(inc in 1:nc) {
-  appdel_tplt_row = matrix(nrow=1,ncol=0)
-  for(jnc in 1:nc) {
-    if(jnc != inc) {
-      temp <- matrix(0, nrow = 1, ncol = nc)
-      temp[1, jnc] <- 1
-      appdel_tplt_row <- cbind(appdel_tplt_row, temp)
-    }
-  }
-  appdel_tplt = rbind(appdel_tplt,appdel_tplt_row);
-}
-
-appdel1 <- appdel_tplt[dtaChNum, ]
-appdel <- t(appdel)
-appdel1 <- t(appdel1)
-appdiff <- appdel -  appdel1
-```  
-
-```{r dontknow}
-ID <- 0.5 * diag(nc - 1) + 0.5 * matrix(1, nrow = nc - 1, ncol = nc - 1)
-outProd <- 0  
-finalIter <- 0
-bInit <- c(0,0,0,0,0,1,1,1,1,1)
-seed10 <- 10000
-```
 
 ```{r first_model}
 finalIter <- 0 
