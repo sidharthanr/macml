@@ -24,7 +24,7 @@ lpr <- function(x) {
   
   omega11 = diag(sigma) ^ 2
   
-  ll = matrix(nrow = n_obs, ncol = 1)
+  ll = vector("numeric", length = n_obs)
   
   # TODO: This will be ***lots*** faster if we can vectorize it.
   for(i in 1:n_obs){
@@ -46,12 +46,10 @@ lpr <- function(x) {
     seed20 = seed10 
     retval = cdfmvna(kk1,kk2, seed20)
     seednext = retval[2]
-    ll[i, 1] = retval[1]
+    ll[i] = retval[1]
   } 
   
-  
   mean(log(ll))
-  
 }
 
 #' Gradient of the CML
