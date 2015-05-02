@@ -319,26 +319,26 @@ cdfmvna <- function(a,r,s){
 #' 
 #' @export
 getComb  <- function(n,dim){
-	combs_all <- combn(n,dim)
-	combs_all <- t(combsALL)
+	combs_all <- t(combn(n,dim))
 	perms_all <- matrix(nrow = 0, ncol = n)
 	num_combs <- nrow(combs_all)
 	
 	# TODO: this might be the kind of thing that would be better in c++
 	for(irow in 1:num_combs){
-		othDims <- matrix(nrow=1,ncol=0)
+		oth_dims <- matrix(nrow = 1, ncol = 0)
 		for(idim in 1:n){
 			check <- which(combs_all[irow,] == idim)
 			if(length(check) == 0 ){
-				oth_dims <- cbind(othDims, idim)
+				oth_dims <- cbind(oth_dims, idim)
 			}
 		}
 		
-		oth_dims <- permutations(ncol(othDims),ncol(othDims),othDims);
-		ini_dims <- kronecker(combs_all[irow,], 
-		                     matrix(1, ncol = nrow(othDims), nrow = 1))
+		# FIXME: function `permutations` does not exist. 
+		oth_dims <- permutations(ncol(oth_dims), ncol(oth_dims), oth_dims)
+		ini_dims <- kronecker(combs_all[irow,],  
+		                      matrix(1, ncol = nrow(oth_dims), nrow = 1))
 		ini_dims <- t(ini_dims)
-		perms_all <- rbind(perms_all, cbind(ini_dims,oth_dims))
+		perms_all <- rbind(perms_all, cbind(ini_dims, oth_dims))
 	}
 	
 	permsall
